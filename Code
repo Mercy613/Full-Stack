@@ -1,0 +1,645 @@
+DoctorApplication.java:
+package com.project.doctor;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+@SpringBootApplication
+public class DoctorApplication {
+public static void main(String[] args)
+{
+SpringApplication.run(DoctorApplication.class, args);
+}
+}
+DoctorController.java
+package com.project.doctor.controller;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.project.doctor.entity.Doctor;
+import com.project.doctor.service.DoctorService;
+@CrossOrigin(origins="http://localhost:3000")
+}
+@GetMapping(value="/{doctorId}",produces="application/json")
+public ResponseEntity<Doctor> getOneDoctor(@PathVariable int doctorId)
+{
+Doctor d=doctorService.getOneDoctor(doctorId);
+if(d!=null)
+return new ResponseEntity<Doctor>(d,HttpStatus.OK);
+return new ResponseEntity<Doctor>(d,HttpStatus.NOT_FOUND);
+}
+@PostMapping(value="/",consumes = "application/json")
+public HttpStatus addDoctor(@RequestBody Doctor doc)
+{
+if(doctorService.insertDoctor(doc))
+return HttpStatus.OK;
+return HttpStatus.NOT_MODIFIED;
+}
+@PutMapping(value="/",consumes = "application/json")
+public HttpStatus modifyDoctor(@RequestBody Doctor doc)
+{
+if(doctorService.modifyDoctor(doc))
+return HttpStatus.OK;
+return HttpStatus.NOT_MODIFIED;
+}
+@DeleteMapping("/{doctorId}")
+11
+public HttpStatus deleteDoctor(@PathVariable int doctorId)
+{
+if(doctorService.deleteDoctor(doctorId))
+return HttpStatus.OK;
+return HttpStatus.NOT_FOUND;
+}
+}
+PatientController.java
+package com.project.doctor.controller;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.project.doctor.entity.Patient;
+import com.project.doctor.service.PatientService;
+@CrossOrigin(origins="http://localhost:3000")
+@RestController
+@RequestMapping("/patient") //http://localhost:8092/patient
+public class PatientController 
+{
+@Autowired
+PatientService patientService;
+@GetMapping(produces="application/json")
+public ResponseEntity<List<Patient>>getAllPatients()
+12
+{
+ return new 
+ResponseEntity<List<Patient>>(patientService.getAllPatients(),HttpStatus.OK); 
+}
+@GetMapping(value="/{patientId}",produces="application/json")
+public ResponseEntity<Patient> getOnePatient(@PathVariable int patientId)
+{
+Patient p=patientService.getOnePatient(patientId);
+if(p!=null)
+return new ResponseEntity<Patient>(p,HttpStatus.OK);
+return new ResponseEntity<Patient>(p,HttpStatus.NOT_FOUND);
+}
+@PostMapping(value="/",consumes = "application/json")
+public HttpStatus addPatient(@RequestBody Patient pat)
+{
+if(patientService.insertPatient(pat))
+return HttpStatus.OK;
+return HttpStatus.NOT_MODIFIED;
+}
+@PutMapping(value="/",consumes = "application/json")
+public HttpStatus modifyPatient(@RequestBody Patient pat)
+{
+if(patientService.modifyPatient(pat))
+return HttpStatus.OK;
+return HttpStatus.NOT_MODIFIED;
+}
+@DeleteMapping("/{patientId}")
+public HttpStatus deletePatient(@PathVariable int patientId)
+{
+if(patientService.deletePatient(patientId))
+return HttpStatus.OK;
+return HttpStatus.NOT_FOUND;
+}
+}
+13
+Doctor.java
+package com.project.doctor.entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+@Entity
+@Table(name="doctor")
+public class Doctor {
+@Id
+@Column(name="doctorid")
+private int doctorId;
+@Column(name="dname")
+private String doctorName;
+@Column(name="specialization")
+private String doctorSpecialization;
+@Column(name="qual")
+private String qualification;
+ @Column(name="hname")
+private String hospitalname;
+ @Column(name="yearsofexperience")
+private int yearsofexperience;
+ @Column(name="ratings")
+private int ratings;
+ public Doctor() {}
+public Doctor(int doctorId, String doctorName, String doctorSpecialization, String 
+qualification,String hospitalname, int yearsofexperience, int ratings) {
+super();
+this.doctorId = doctorId;
+this.doctorName = doctorName;
+this.doctorSpecialization = doctorSpecialization;
+this.qualification = qualification;
+this.hospitalname = hospitalname;
+this.yearsofexperience = yearsofexperience;
+14
+this.ratings = ratings;
+}
+public int getDoctorId() {
+return doctorId;
+}
+public void setDoctorId(int doctorId) {
+this.doctorId = doctorId;
+}
+public String getDoctorName() {
+return doctorName;
+}
+public void setDoctorName(String doctorName) {
+this.doctorName = doctorName;
+}
+public String getDoctorSpecialization() {
+return doctorSpecialization;
+}
+public void setDoctorSpecialization(String doctorSpecialization) {
+this.doctorSpecialization = doctorSpecialization;
+}
+public String getQualification() {
+return qualification;
+}
+public void setQualification(String qualification) {
+this.qualification = qualification;
+}
+public String getHospitalname() {
+return hospitalname;
+}
+public void setHospitalname(String hospitalname) {
+this.hospitalname = hospitalname;
+}
+public int getYearsofexperience() {
+return yearsofexperience;
+15
+}
+public void setYearsofexperience(int yearsofexperience) {
+this.yearsofexperience = yearsofexperience;
+}
+public int getRatings() {
+return ratings;
+}
+public void setRatings(int ratings) {
+this.ratings = ratings;
+}
+}
+Patient.java
+package com.project.doctor.entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+@Entity
+@Table(name="patient")
+public class Patient {
+@Id
+@Column(name="patientid")
+private int patientId;
+@Column(name="pfname")
+private String patientfirstName;
+@Column(name="plname")
+private String patientlastName;
+@Column(name="phno")
+private String phonenumber;
+ @Column(name="addr")
+private String address;
+ @Column(name="email")
+private String email;
+ public Patient() {}
+16
+public Patient(int patientId, String patientfirstName, String patientlastName, String 
+phonenumber, String address,
+String email) {
+super();
+this.patientId = patientId;
+this.patientfirstName = patientfirstName;
+this.patientlastName = patientlastName;
+this.phonenumber = phonenumber;
+this.address = address;
+this.email = email;
+}
+public int getPatientId() {
+return patientId;
+}
+public void setPatientId(int patientId) {
+this.patientId = patientId;
+}
+public String getPatientfirstName() {
+return patientfirstName;
+}
+public void setPatientfirstName(String patientfirstName) {
+this.patientfirstName = patientfirstName;
+}
+public String getPatientlastName() {
+return patientlastName;
+}
+public void setPatientlastName(String patientlastName) {
+this.patientlastName = patientlastName;
+}
+public String getPhonenumber() {
+return phonenumber;
+}
+public void setPhonenumber(String phonenumber) {
+this.phonenumber = phonenumber;
+17
+}
+public String getAddress() {
+return address;
+}
+public void setAddress(String address) {
+this.address = address;
+}
+public String getEmail() {
+return email;
+}
+public void setEmail(String email) {
+this.email = email;
+}
+}
+DoctorRepository.java
+package com.project.doctor.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.project.doctor.entity.Doctor;
+public interface DoctorRepository extends JpaRepository<Doctor,Integer> 
+{
+}
+PatientRepository.java
+package com.project.doctor.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.project.doctor.entity.Patient;
+public interface PatientRepository extends JpaRepository<Patient,Integer>
+{
+}
+DoctorService.java
+package com.project.doctor.service;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+18
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.project.doctor.entity.Doctor;
+import com.project.doctor.repository.DoctorRepository;
+@Service
+public class DoctorService 
+{
+@Autowired
+DoctorRepository doctorRepository;
+@Transactional(readOnly=true)
+public List<Doctor> getAllDoctors()
+{
+return doctorRepository.findAll();
+}
+@Transactional(readOnly=true)
+public Doctor getOneDoctor(int doctorId)
+{
+Optional<Doctor> doc=doctorRepository.findById(doctorId);
+if(doc.isPresent())
+return doc.get();
+return null;
+}
+@Transactional
+public boolean insertDoctor(Doctor doc)
+{
+return doctorRepository.save(doc)!=null;
+}
+@Transactional
+public boolean modifyDoctor(Doctor doc)
+{
+return doctorRepository.save(doc)!=null;
+}
+@Transactional
+19
+public boolean deleteDoctor(int doctorId)
+{
+long count=doctorRepository.count();
+doctorRepository.deleteById(doctorId);
+return count>doctorRepository.count();
+}
+}
+PatientService.java
+package com.project.doctor.service;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.project.doctor.entity.Patient;
+import com.project.doctor.repository.PatientRepository;
+@Service
+public class PatientService 
+{
+@Autowired
+PatientRepository patientRepository;
+@Transactional(readOnly=true)
+public List<Patient> getAllPatients()
+{
+return patientRepository.findAll();
+}
+@Transactional(readOnly=true)
+public Patient getOnePatient(int patientId)
+{
+Optional<Patient> pat=patientRepository.findById(patientId);
+if(pat.isPresent())
+return pat.get();
+20
+return null;
+}
+@Transactional
+public boolean insertPatient(Patient pat)
+{
+return patientRepository.save(pat)!=null;
+}
+@Transactional
+public boolean modifyPatient(Patient pat)
+{
+return patientRepository.save(pat)!=null;
+}
+@Transactional
+public boolean deletePatient(int patientId)
+{
+long count=patientRepository.count();
+patientRepository.deleteById(patientId);
+return count>patientRepository.count();
+}
+}
+App.Js:
+import React, { useEffect, useState } from "react";
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.js";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import "./App.css";
+import Home from "./Pages/Home";
+import DoctorLogin from "./Pages/DoctorLogin";
+21
+import DoctorDashboard from "./Pages/DoctorDashboard";
+import PaitentDashboard from "./Pages/PaitentDashboard";
+import Error from "./Pages/Error";
+import { AuthContext } from "./Auth/AuthContext";
+import PhoneNumber from "./components/PhoneNumber";
+import PersonalDetails from "./Doctor/PersonalDetails";
+import SearchDoctor from "./Patient/SearchDoctor";
+import PerviousAppointments from "./Patient/PerviousAppointments";
+import Spinner from "react-bootstrap/Spinner";
+import Selectdate from "./Patient/Selectdate";
+import BookingSlots from "./Doctor/BookingSlots";
+import AppointmentStatus from "./Patient/AppointmentStatus";
+function App() {
+const [token, setToken] = useState(window.localStorage.getItem("token"));
+const [googleId, setGoogleId] = useState(
+window.localStorage.getItem("googleId")
+);
+const [apiLoaded, setApiLoaded] = useState(false);
+useEffect(() => {
+if (window.gapi !== undefined) {
+ setApiLoaded(false);
+ window.gapi.load("client:auth2", initClient);
+ function initClient() {
+window.gapi.client.init({
+apiKey: process.env.REACT_APP_API_KEY,
+clientId: process.env.REACT_APP_CLIENT_ID,
+ discoveryDocs: [process.env.REACT_APP_DISCOVERY_DOCS],
+ scope: process.env.REACT_APP_SCOPE,
+})
+.then(
+function () {
+if (window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
+console.log(`Is signed in? ${window.gapi.auth2.getAuthInstance().isSignedIn.get()}`);
+22
+} else {
+console.log("Currently Logged Out!!");
+ }
+ setApiLoaded(true);
+},
+function (error) {
+console.log(`error ${JSON.stringify(error)}`);
+setApiLoaded(true);}
+);
+setApiLoaded(true);
+} else {
+console.log("[Google] inside the else block line 54 App.js");
+setApiLoaded(false);
+}
+return apiLoaded ? (
+<Router>
+<AuthContext.Provider value={{ token, setToken, googleId, setGoogleId }}>
+<Switch>
+<Route exact path="/" component={Home} />
+ <Route exact path="/doctorlogin" component={DoctorLogin} />
+<Route exact path="/doctor" component={DoctorDashboard} />
+<Route exact path="/patient/searchdoctor" component={SearchDoctor} />
+<Route exact path="/patient" component={PaitentDashboard} />
+<Route exact path="/patient/update-phone" component={PhoneNumber} />
+<Routeexactpath="/patient/previousappointments"component={PerviousAppointments>
+<Route exact path="/doctor/perosnaldetails" component={PersonalDetails}/>
+<Route exact path="/doctor/payment-history" component={DocAppointments}/>
+ <Route exact path="/patient/selectdate" component={Selectdate} />
+<Route exact path="/patient/book-slot" component={BookingSlots} />
+<Route exact path="/patient/appointment-status" component={AppointmentStatus} />
+<Route path="*">
+ <Error />
+</Route>
+</Switch>
+23
+</AuthContext.Provider>
+</Router>
+) : (
+<div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+<Spinner animation="border" variant="danger" role="status">
+<span className="sr-only">Loading...</span>
+</Spinner>
+</div>
+);
+}
+export default App;
+Auth Context.Js:
+import {createContext} from 'react';
+export const AuthContext = createContext();
+LoginForm.Js:
+import React, { useContext, useState } from 'react';
+import { Redirect, useHistory } from "react-router-dom";
+import axios from 'axios';
+import { AuthContext } from '../Auth/AuthContext';
+const LoginForm = () => {
+const [username, setUsername] = useState('');
+const [password, setPassword] = useState('');
+const [status, setStatus] = useState(0);
+const { token, setToken, googleId, setGoogleId } = useContext(AuthContext);
+const history = useHistory();
+async function login() {
+try {
+const res = await axios.post(
+`${process.env.REACT_APP_SERVER_URL}/doctors/login/`,{
+username: username,
+ password: password});
+setStatus(res.status);
+ const token = res.data.token;
+ if (res.status === 200) {
+24
+ window.localStorage.setItem("token", token);
+window.localStorage.removeItem("googleId");
+setGoogleId(null);
+setToken(token);
+history.push('/doctor');}}
+catch (err) {
+console.log(err);}}
+if (token && !googleId) {
+return <Redirect to="/doctor" />}
+return (<Container className='text-center'>
+<Row>
+<className='offset-lg-3 mt-5 '>
+<Card>
+<Form>
+<CardHeader className=''>Welcome back, Doc</CardHeader>
+<CardBody >
+FormGroup row>
+<Label for='email' sm={3}>Username
+</Label>
+<Input type='text' name='username' id='username'placeholder='Doctor ID’
+onChange={(e) => setUsername(e.target.value)}/>
+</Col>
+</FormGroup>
+<FormGroup row>
+<Label for='password' sm={3}>Password</Label><Col sm={9}>
+<Input type='password' name='password' id='password' placeholder='Password'
+ onChange={(e) => setPassword(e.target.value)}onKeyPress={(target) => {
+ if (target.charCode === 13) {
+login();}} }/>
+ </Col>
+</FormGroup>
+{status === 201 && <p className="warning" style={{ color: "red", fontSize: "15px" 
+}}>Wrong username or password! Please try again</p>}
+</CardBody>
+25
+<CardFooter>
+<Button block color="primary" onClick={login}>Sign In </Button></CardFooter>
+</Form>
+</Card>
+</Col>
+</Row>
+</Container>);}
+export default LoginForm;
+Doctor Dashboard:
+import React from "react";
+import Navbar from "../Basic/Navbar";
+import Leftside from "../Dashbaord/LeftsideDoctor";
+import TodaysSchedule from "../Doctor/TodaysSchedule";
+import PatientDetails from “../Patient/PatientDetails”;
+import "../Dashbaord/dashboard.css";
+const DoctorDashboard = () => {
+ return (
+ <div className="bg-dark" style={{ height: "100vh" }}>
+<Navbar />
+ <div>
+ <div className="row m-5" style={{ maxWidth: "100%" }}>
+ <div className="col-3 col-md-3 p-4 bg-white "style={{ height: "80vh" }} >
+<Leftside /></div>
+<div
+ className="col-9 col-md-9 p-4"
+ style={{
+ border: "15px solid black ",
+ height: "80vh",
+ backgroundColor: "#6c757d",
+ }}
+ >
+ <TodaysSchedule /></div> </div> </div></div>);
+};
+export default DoctorDashboard;
+26
+Patient Dashboard:
+import React, { useContext } from "react";
+import Navbar from "../Basic/Navbar";
+import Leftside from "../Dashbaord/LeftsidePatient";
+import { useState, useEffect } from "react";
+import Axios from "axios";
+import "../Dashbaord/dashboard.css";
+import { AuthContext } from "../Auth/AuthContext";
+const PersonalDetails = () => {
+const [patient, setPatient] = useState({});
+const [loading, setLoading] = useState(true);
+const { googleId } = useContext(AuthContext);
+ useEffect(() => {
+ setLoading(true);
+ const getPatientDetails = async () => {
+ const res = await Axios.get(
+`${process.env.REACT_APP_SERVER_URL}/patients/getPatientDetails/${googleId}` );
+ if (res.status === 200) {
+ setPatient(res.data);
+ window.localStorage.setItem("user", JSON.stringify(res.data));
+ setLoading(false);
+ } else {
+ console.log(res.data.message);
+ setLoading(false); }};
+ getPatientDetails();
+ }, [googleId]);
+ return (
+ <div className="bg-dark" style={{ height: "100vh" }}>
+ <Navbar />
+ {loading ? (
+ <div className="row justify-content-center position-relative">
+ <div className="spinner-border align-middle d-flex justify-content-center positionabsolute top-50 start-50 translate-middle style={{ width: "10rem", height: "10rem" }} 
+role="status"></div></div>
+27
+ ) : (
+ <div>
+ <div className="row m-5" style={{ maxWidth: "100%" }}>
+ <div className="col-3 col-md-3 p-4 bg-white "style={{ height: "80vh" }}>
+<Leftside /></div>
+<div className="col-9 col-md-9 p-4" style={{ border: "15px solid yellow ",height: 
+"80vh", backgroundColor: "#6c757d",}}>
+ <div className="row ">
+ <div className="col-9 col-md-9 p-4">
+ <div className="card mb-4">
+ <h4 className="card-header">Personal Details</h4>
+ <ul className="list-group">
+ <li className="list-group-item">
+ <span className="badge badge-success mr-2 p-2"> Name:</span>
+ {patient.name}
+ </li>
+<li className="list-group-item">
+<span className="badge badge-success mr-2 p-2">
+ Email:
+</span>
+{patient.email}
+ </li>
+<li className="list-group-item">
+<span className="badge badge-success mr-2 p-2">
+Phone No:</span>{patient.phoneNumber}
+</li>
+</ul>
+ </div>
+ </div>
+<div className="col-3 col-md-3 p-4 ">
+<img src={patient.picture} style={{ width: "100%" }} alt=""/>
+ </div>
+ </div>
+ </div>
+</div>
+ </div>
+ )}
+ </div>
+ );
+};
